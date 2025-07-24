@@ -1,9 +1,16 @@
+import os
+
+# Corrige erro de permissão no cache do Selenium
+os.environ["XDG_CACHE_HOME"] = "/tmp/selenium_cache"
+os.makedirs(os.environ["XDG_CACHE_HOME"], exist_ok=True)
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from datetime import datetime
 from utils.webdriver import configurar_navegador  # Agora usando o navegador configurado
+import time
 from datetime import datetime
 from selenium.webdriver.chrome.options import Options
 
@@ -65,7 +72,7 @@ def coletar_pedidos_cecafi():
             "numero_pedido": dados[6],
             "codigo_produto": dados[8],
             "descricao_produto": dados[9],
-            "industria": "CECAFI",
+            "industria": "Cecafi",
             "qtd_pallets": int(float(dados[11])),
             "tipo_produto": "CERAMICA/PISO",
             "total_m2": float(dados[10]),

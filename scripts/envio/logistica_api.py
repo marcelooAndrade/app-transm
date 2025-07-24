@@ -11,7 +11,7 @@ def enviar_para_api_logistica(pedidos):
     #print(json.dumps(payload, indent=2, ensure_ascii=False))
 
     try:
-        response = requests.post(url,  json=payload)
+        response = requests.post(url, json=payload)
         response.raise_for_status()
         return response
     except requests.exceptions.HTTPError as e:

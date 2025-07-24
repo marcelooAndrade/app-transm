@@ -1,4 +1,10 @@
 # ceramica_almeida.py
+import os
+
+# Corrige erro de permissão no cache do Selenium
+os.environ["XDG_CACHE_HOME"] = "/tmp/selenium_cache"
+os.makedirs(os.environ["XDG_CACHE_HOME"], exist_ok=True)
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -6,6 +12,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import time
+
 from datetime import datetime
 
 def coletar_pedidos_almeida():
@@ -64,12 +72,12 @@ def coletar_pedidos_almeida():
         # Exemplo, ajuste índices conforme a sua tabela
         pedidos.append({
                 "representante": "Não tem",
-                "data_pedido": "1900-01-01",
+                "data_pedido": None,
                 "cliente": col[1].get_text(strip=True),
                 "numero_pedido": col[0].get_text(strip=True),
                 "codigo_produto": "Não tem",
                 "descricao_produto": "Não tem",
-                "industria": "ALMEIDA",
+                "industria": "Almeida",
                 "qtd_pallets": 0,
                 "tipo_produto": "CERAMICA/PISO",
                 "total_m2": 0.00,

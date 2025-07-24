@@ -1,10 +1,8 @@
-from ceramicas import cedasa, cecafi, novaporcelanato, incopisos, deltaceramica, villagres, almeida # e os outros módulos conforme necessário
+from ceramicas import cedasa, cecafi, novaporcelanato, incopisos, deltaceramica, villagres, almeida
 from envio.logistica_api import enviar_para_api_logistica
 from datetime import datetime
 import json
 import traceback
-
-import datetime
 
 # Lista de funções de coleta
 coletores = [
@@ -15,39 +13,41 @@ coletores = [
     deltaceramica.coletar_pedidos_delta,
     villagres.coletar_pedidos_villagres,
     almeida.coletar_pedidos_almeida
-    # adicionar os outros: coletar_pedidos_xyz
+    # adicionar outros aqui
 ]
 
 pedidos = []
 
-# Executa todas as coletas e junta os pedidos
+print("📦 Iniciando coletas de pedidos...")
 for coletor in coletores:
     try:
         resultado = coletor()
         pedidos.extend(resultado)
+        print(f"✅ {coletor.__name__} retornou {len(resultado)} pedidos.")
     except Exception as e:
         print(f"❌ Erro ao coletar com {coletor.__name__}: {e}")
 
-# Converte as datas
+print(f"📊 Total de pedidos coletados: {len(pedidos)}")
+
+# Conversão segura de datas
 for pedido in pedidos:
     try:
-        if "/" in pedido["data_pedido"]:
-            pedido["data_pedido"] = datetime.strptime(pedido["data_pedido"], "%d/%m/%Y").date().isoformat()
+        print(f"⚠️ Dados do pedido: {pedido}")
+
+        data_raw = pedido.get("data_pedido", "")
+        if isinstance(data_raw, str) and "/" in data_raw:
+            pedido["data_pedido"] = datetime.strptime(data_raw, "%d/%m/%Y").date().isoformat()
     except Exception as e:
-        print(f"❌ Erro ao converter data '{pedido['data_pedido']}': {e}")
+        print(f"⚠️ Erro ao converter data '{pedido.get('data_pedido')}': {e}")
+        pedido["data_pedido"] = None  # fallback seguro
 
+print("⏱️ Scraping finalizado em:", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-# Exibe os dados coletados
-#print("📦 Dados coletados:")
-#print(json.dumps(pedidos, indent=2, ensure_ascii=False))
-print("Scraping iniciado")
-print("Horário:", datetime.datetime.now())
-
-# Envia para a API com tratamento de erro detalhado
+# Envia para a API
 try:
     res = enviar_para_api_logistica(pedidos)
-    print(f"📨 Status: {res.status_code}")
-    #print(f"🔁 Resposta: {res.json()}")
+    print(f"📨 Enviado para API com status: {res.status_code}")
+    # print(f"🔁 Resposta: {res.json()}")
 except Exception as e:
     print("❌ Erro ao enviar para API:")
     traceback.print_exc()

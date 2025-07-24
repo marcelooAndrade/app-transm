@@ -1,3 +1,9 @@
+import os
+
+# Corrige erro de permissão no cache do Selenium
+os.environ["XDG_CACHE_HOME"] = "/tmp/selenium_cache"
+os.makedirs(os.environ["XDG_CACHE_HOME"], exist_ok=True)
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -5,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import os
+import time
+
 from datetime import datetime
 
 os.environ["XDG_CACHE_HOME"] = "/tmp/selenium_cache"
@@ -75,13 +83,13 @@ def coletar_pedidos_cedasa():
                 estado = cidade_uf[1].strip() if len(cidade_uf) > 1 else ""
 
                 pedido = {
-                    "representante": dados[3],
+                    "representante": "Não tem",
                     "data_pedido": dados[1],
                     "cliente": dados[3],
                     "numero_pedido": dados[0],
                     "codigo_produto": "",
                     "descricao_produto": dados[5],
-                    "industria": "CEDASA",
+                    "industria": "Cedasa",
                     "qtd_pallets": dados[15],         # <-- Pallets, ex: '4,00'
                     "tipo_produto": "CERAMICA/PISO",
                     "total_m2": dados[8],             # <-- Qtdade (m²), ex: '653,76'

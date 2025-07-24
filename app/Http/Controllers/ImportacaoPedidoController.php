@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Smalot\PdfParser\Parser;
 use App\Models\PedidoLogistica;
 use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Log;
+
 
 class ImportacaoPedidoController extends Controller
 {
@@ -99,8 +99,8 @@ class ImportacaoPedidoController extends Controller
             }
 
             $existe = PedidoLogistica::where('numero_pedido', $numero)
-            ->where('codigo_produto', $codigo)
-            ->exists();
+                ->where('codigo_produto', $codigo)
+                ->exists();
 
             $peso = $pedido['peso_total'] ?? 0;
             $peso = str_replace(['.', ','], ['', '.'], $peso);
@@ -132,8 +132,6 @@ class ImportacaoPedidoController extends Controller
 
                 $importados[] = "{$numero} - {$codigo}";
             }
-
-
         }
 
         return redirect()->route('pedidos.index')->with('success', count($importados) . ' pedidos importados com sucesso!');
@@ -141,14 +139,6 @@ class ImportacaoPedidoController extends Controller
 
     public function scraping(Request $request)
     {
-        $request->validate([
-            'pedidos' => 'required|array',
-            'pedidos.*.numero_pedido' => 'required|string',
-            'pedidos.*.cliente' => 'required|string',
-            'pedidos.*.cidade' => 'required|string',
-            'pedidos.*.estado' => 'required|string',
-            // (adicione outras regras conforme necessidade)
-        ]);
 
         $importados = [];
 
@@ -156,21 +146,9 @@ class ImportacaoPedidoController extends Controller
             // Verifica se o pedido já foi importado
             if (!PedidoLogistica::where('numero_pedido', $data['numero_pedido'])->exists()) {
 
-                // Busca ou cria o cliente com base no CNPJ
-                $cliente = Cliente::firstOrCreate(
-                    ['nome' => $data['cliente']],
-                    [
-                        'nome'     => $data['cliente'],
-                        'email'    => $data['email_cliente'] ?? null,
-                        'telefone' => $data['telefone_cliente'] ?? null,
-                        'endereco' => $data['endereco_cliente'] ?? null,
-                        'status'   => 'ativo'
-                    ]
-                );
-
                 // Monta os dados do pedido
                 $pedidoData = [
-                    'cliente_id'     => $cliente->id,
+                    'cliente'     => $data['cliente'],
                     'numero_pedido'  => $data['numero_pedido'],
                     'codigo_produto' => $data['codigo_produto'],
                     'descricao_produto' => $data['descricao_produto'],
@@ -196,7 +174,4 @@ class ImportacaoPedidoController extends Controller
                 : 'Nenhum novo pedido foi importado. Todos já existem.'
         ]);
     }
-
-
-
 }

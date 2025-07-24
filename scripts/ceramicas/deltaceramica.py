@@ -1,3 +1,9 @@
+import os
+
+# Corrige erro de permissão no cache do Selenium
+os.environ["XDG_CACHE_HOME"] = "/tmp/selenium_cache"
+os.makedirs(os.environ["XDG_CACHE_HOME"], exist_ok=True)
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -5,6 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import os
+import time
+
 from datetime import datetime
 import requests
 
@@ -47,12 +55,7 @@ def coletar_pedidos_delta():
         return []
 
     pedidos_data = pedidos_res.json().get("orders", [])
-    if pedidos_data:
-        print("🔍 Campos disponíveis no primeiro pedido:")
-    for key in pedidos_data[0]:
-        print(f" - {key}: {pedidos_data[0][key]}")
-    else:
-        print("⚠️ Nenhum pedido retornado para inspecionar.")
+
 
     pedidos = []
 
