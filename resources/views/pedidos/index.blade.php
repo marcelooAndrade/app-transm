@@ -17,96 +17,98 @@
         </a>
     </div>
 
-    <!-- Grid principal: Importação + Filtros -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
-        <!-- Coluna: Importações -->
-        <div class="md:col-span-2 space-y-4">
+    <!-- Grid principal: Importações em 2 colunas e Filtros abaixo -->
+    <div class="space-y-6">
+
+        <!-- Grid: Importações em 2 colunas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <!-- Importar PDF -->
-            <div class="bg-card p-6 rounded-lg border border-border shadow-sm">
+            <div
+                class="bg-card p-6 rounded-lg border border-border shadow-sm min-h-[180px] flex flex-col justify-between">
                 <h2 class="text-xl font-bold mb-4">📥 Importar PDF</h2>
-                <form method="POST" action="{{ route('pedidos.upload') }}" enctype="multipart/form-data"
-                    class="space-y-4">
+                <form method="POST" action="{{ route('pedidos.upload') }}" enctype="multipart/form-data">
                     @csrf
-                    <input type="file" name="arquivo" accept="application/pdf"
-                        class="w-full px-3 py-2 border border-border rounded-lg bg-background text-sm">
-                    <button type="submit"
-                        class="w-full md:w-auto px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition">
-                        Importar PDF
-                    </button>
+                    <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+                        <input type="file" name="arquivo" accept="application/pdf"
+                            class="flex-1 px-3 py-2 border border-border rounded-lg bg-background text-sm">
+                        <button type="submit"
+                            class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition whitespace-nowrap">
+                            Importar PDF
+                        </button>
+                    </div>
                 </form>
             </div>
 
             <!-- Importar via Scraping -->
-            <div class="bg-card p-6 rounded-lg border border-border shadow-sm">
+            <div
+                class="bg-card p-6 rounded-lg border border-border shadow-sm min-h-[180px] flex flex-col justify-between">
                 <h2 class="text-xl font-bold mb-4">🤖 Importar via Scraping</h2>
                 <button onclick="executarScraping()"
                     class="w-full md:w-auto px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition">
                     Executar Scraping
                 </button>
             </div>
+        </div>
 
-            <!-- Modal de Feedback -->
-            <div id="modalScraping" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
-                <div class="bg-white p-6 rounded-lg max-w-lg w-full shadow-xl">
-                    <h2 class="text-xl font-semibold mb-4">Importando Dados...</h2>
-                    <pre id="logSaida"
-                        class="text-sm bg-gray-100 p-3 rounded h-64 overflow-y-auto whitespace-pre-line">Aguarde...</pre>
-                    <button onclick="fecharModal()"
-                        class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Fechar</button>
-                </div>
+
+        <!-- Modal de Feedback (fora do grid para sobrepor corretamente) -->
+        <div id="modalScraping" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden">
+            <div class="bg-white p-6 rounded-lg max-w-lg w-full shadow-xl">
+                <h2 class="text-xl font-semibold mb-4">Importando Dados...</h2>
+                <pre id="logSaida"
+                    class="text-sm bg-gray-100 p-3 rounded h-64 overflow-y-auto whitespace-pre-line">Aguarde...</pre>
+                <button onclick="fecharModal()"
+                    class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Fechar</button>
             </div>
         </div>
 
-        <!-- Coluna: Filtros -->
-        <div class="md:col-span-3">
-            <form method="GET" action="{{ route('pedidos.index') }}"
-                class="bg-card p-6 rounded-lg border border-border shadow-sm">
-                <h3 class="text-lg font-semibold mb-4">🔎 Filtros</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Campo de busca -->
-                    <div class="space-y-2 col-span-2">
-                        <label class="text-sm font-medium">Buscar</label>
-                        <div class="relative">
-                            <i data-lucide="search"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="ID, cliente, cidade, representante..."
-                                class="w-full pl-10 px-3 py-2 border border-border rounded-lg bg-background">
-                        </div>
-                    </div>
-
-                    <!-- Filtro de status -->
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium">Status</label>
-                        <select name="status" class="w-full px-3 py-2 border border-border rounded-lg bg-background">
-                            <option value="all" {{ request('status')==='all' ? 'selected' : '' }}>Todos</option>
-                            <option value="Pendente" {{ request('status')==='Pendente' ? 'selected' : '' }}>Pendente
-                            </option>
-                            <option value="Em Trânsito" {{ request('status')==='Em Trânsito' ? 'selected' : '' }}>Em
-                                Trânsito</option>
-                            <option value="Entregue" {{ request('status')==='Entregue' ? 'selected' : '' }}>Entregue
-                            </option>
-                            <option value="Cancelado" {{ request('status')==='Cancelado' ? 'selected' : '' }}>Cancelado
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Ações -->
-                    <div class="space-y-2 flex flex-col justify-end">
-                        <div class="flex gap-2">
-                            <button type="submit"
-                                class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-                                <i data-lucide="filter" class="w-4 h-4"></i>
-                                Aplicar
-                            </button>
-                            <a href="{{ route('pedidos.index') }}"
-                                class="px-4 py-2 text-sm text-red-600 hover:underline font-medium">Limpar</a>
-                        </div>
+        <!-- Filtros em linha abaixo -->
+        <form method="GET" action="{{ route('pedidos.index') }}"
+            class="bg-card p-6 rounded-lg border border-border shadow-sm">
+            <h3 class="text-lg font-semibold mb-4">🔎 Filtros</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <!-- Campo de busca -->
+                <div class="space-y-2 md:col-span-2">
+                    <label class="text-sm font-medium">Buscar</label>
+                    <div class="relative">
+                        <i data-lucide="search"
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="ID, cliente, cidade, representante..."
+                            class="w-full pl-10 px-3 py-2 border border-border rounded-lg bg-background">
                     </div>
                 </div>
-            </form>
-        </div>
+
+                <!-- Filtro de status -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium">Status</label>
+                    <select name="status" class="w-full px-3 py-2 border border-border rounded-lg bg-background">
+                        <option value="all" {{ request('status')==='all' ? 'selected' : '' }}>Todos</option>
+                        <option value="Pendente" {{ request('status')==='Pendente' ? 'selected' : '' }}>Pendente
+                        </option>
+                        <option value="Em Trânsito" {{ request('status')==='Em Trânsito' ? 'selected' : '' }}>Em
+                            Trânsito</option>
+                        <option value="Entregue" {{ request('status')==='Entregue' ? 'selected' : '' }}>Entregue
+                        </option>
+                        <option value="Cancelado" {{ request('status')==='Cancelado' ? 'selected' : '' }}>Cancelado
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Botões -->
+                <div class="flex gap-2 mt-4 md:mt-0">
+                    <button type="submit"
+                        class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                        <i data-lucide="filter" class="w-4 h-4"></i>
+                        Aplicar
+                    </button>
+                    <a href="{{ route('pedidos.index') }}"
+                        class="px-4 py-2 text-sm text-red-600 hover:underline font-medium">Limpar</a>
+                </div>
+            </div>
+        </form>
     </div>
+
 
 
     <!-- Tabela de Pedidos -->
@@ -123,7 +125,7 @@
                         <th class="text-left p-4">Cliente</th>
                         <th class="text-left p-4">Quantidade</th>
                         <th class="text-left p-4">Rota</th>
-                        <th class="text-left p-4">Valor Frete</th>
+                        <th class="text-left p-4">Industria</th>
                         <th class="text-left p-4">Status</th>
                         <th class="text-left p-4">Data Entrega</th>
                         <th class="text-left p-4">Ações</th>
@@ -132,18 +134,19 @@
                 <tbody>
                     @foreach ($pedidos as $pedido)
                     <tr class="border-b border-border hover:bg-secondary/30">
-                        <td class="p-4 font-medium">{{ $pedido->id }}</td>
+                        <td class="p-4 font-medium">{{ $pedido->numero_pedido }}</td>
                         <td class="p-4">{{ $pedido->cliente }}</td>
                         <td class="p-4">
                             <div class="space-y-1">
                                 <div class="text-sm">{{ $pedido->peso_total }} kg</div>
                                 <div class="text-xs text-muted-foreground">{{ $pedido->qtd_pallets }} paletes</div>
+                                <div class="text-xs text-muted-foreground">{{ $pedido->total_m2 }} m2</div>
                             </div>
                         </td>
                         <td class="p-4 text-sm">{{ $pedido->cidade }} - {{ $pedido->estado }}</td>
                         <td class="p-4">
                             <div class="space-y-1">
-                                <div class="font-medium">m²: {{ number_format($pedido->total_m2, 2, ',', '.') }}</div>
+                                <div class="font-medium">{{ $pedido->industria }}</div>
                             </div>
                         </td>
                         <td class="p-4">
@@ -183,12 +186,12 @@
 
         if (event.data.includes('[FINALIZADO]')) {
             evtSource.close();
+            fecharModal();
+            location.reload(); // 🔄 Atualiza a página ao finalizar
         }
     };
 
     evtSource.onerror = function(err) {
-        console.log(err);
-
         logEl.textContent += "\nErro ao conectar com o servidor.";
         evtSource.close();
     };
@@ -198,5 +201,6 @@ function fecharModal() {
     document.getElementById('modalScraping').classList.add('hidden');
 }
 </script>
+
 
 @endsection

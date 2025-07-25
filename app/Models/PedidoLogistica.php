@@ -42,7 +42,7 @@ class PedidoLogistica extends Model
 
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class);
+        return $this->belongsTo(Pessoa::class);
     }
 
     public function rota()
@@ -50,10 +50,11 @@ class PedidoLogistica extends Model
         return $this->belongsTo(Rota::class);
     }
 
-    public function tipoCaminhao()
+    public function cargas()
     {
-        return $this->belongsTo(TipoCaminhao::class);
+        return $this->belongsToMany(Carga::class, 'carga_pedido', 'pedido_id', 'carga_id');
     }
+
 
     public function scopePendentes($query)
     {

@@ -2,47 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\RotaCidade;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Rota extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'origem',
-        'destino',
-        'distancia',
-        'tempo_medio',
-        'valor_base',
-        'status',
-        'utilizacoes'
+        'nome',
+        'status'
     ];
 
     protected $casts = [
-        'status' => 'string',
-        'valor_base' => 'decimal:2',
-        'distancia' => 'integer',
-        'utilizacoes' => 'integer'
+        'status' => 'string'
     ];
 
-    public function pedidos()
+    public function cidades()
     {
-        return $this->hasMany(Pedido::class);
+        return $this->hasMany(RotaCidade::class);
     }
 
-    public function scopeAtivas($query)
-    {
-        return $query->where('status', 'ativa');
-    }
-
-    public function incrementarUtilizacao()
-    {
-        $this->increment('utilizacoes');
-    }
-
-    public function getRotaCompleta()
-    {
-        return $this->origem . ' → ' . $this->destino;
-    }
 }

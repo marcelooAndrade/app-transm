@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente;
 use App\Models\PedidoLogistica;
+use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,6 +23,7 @@ class PedidoController extends Controller
                     ->orWhere('cidade', 'like', "%{$search}%")
                     ->orWhere('estado', 'like', "%{$search}%")
                     ->orWhere('cliente', 'like', "%{$search}%")
+                    ->orWhere('industria', 'like', "%{$search}%")
                     ->orWhere('data_pedido', 'like', "%{$search}%");
             });
         }
@@ -39,18 +40,19 @@ class PedidoController extends Controller
         }
 
         // Ordenação
-        $sortField = $request->get('sort_field', 'created_at');
+        $sortField = $request->get('sort_field', 'cliente');
         $sortDirection = $request->get('sort_direction', 'desc');
         $query->orderBy($sortField, $sortDirection);
 
-        $pedidos = $query->paginate(6);
+        $pedidos = $query->paginate(10);
+
 
         return view('pedidos.index', compact('pedidos'));
     }
 
     public function create()
     {
-        $clientes = Cliente::orderBy('nome')->get();
+        $clientes = Pessoa::orderBy('nome')->get();
         return view('pedidos.form', compact('clientes'));
     }
 
@@ -66,7 +68,9 @@ class PedidoController extends Controller
             'valor_frete' => 'required|numeric|min:0',
             'valor_frete_motorista' => 'required|numeric|min:0',
             'data_entrega_prevista' => 'required|date',
-            'observacoes' => 'nullable|string'
+            'observacoes' => 'nullable|string',
+            'status'      => 'nullable|in:Pendente,Liberado, Em Trânsito,Entregue,Cancelado',
+
         ]);
 
         if ($validator->fails()) {
@@ -91,7 +95,9 @@ class PedidoController extends Controller
     public function edit($id)
     {
         $pedido = PedidoLogistica::with(['fornecedor', 'cliente', 'rota', 'tipoCaminhao'])->findOrFail($id);
-        return view('pedidos.form', compact('pedido'));
+        $clientes = Pessoa::orderBy('nome')->get();
+
+        return view('pedidos.form', compact('pedido', 'clientes'));
     }
 
     public function update(Request $request, $id)
@@ -112,7 +118,7 @@ class PedidoController extends Controller
             'peso_total'          => 'nullable|numeric|min:0',
             'cidade'              => 'nullable|string|max:255',
             'estado'              => 'nullable|string|max:2',
-            'status'              => 'nullable|in:Pendente,Em Trânsito,Entregue,Cancelado',
+            'status'              => 'nullable|in:Pendente,Liberado, Em Trânsito,Entregue,Cancelado',
         ]);
 
         $pedido->update($validated);

@@ -26,19 +26,19 @@
         @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {{-- <div>
+             <div>
                 <label for="cliente_id" class="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
                 <select name="cliente_id" id="cliente_id"
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Selecione um cliente</option>
                     @foreach($clientes as $cliente)
-                    <option value="{{ $cliente->id }}" {{ old('cliente_id', $pedido->cliente_id ?? '') == $cliente->id ?
-                        'selected' : '' }}>
+                   <option value="{{ $cliente->id }}"
+                            {{ (old('cliente_id') !== null ? old('cliente_id') : ($pedido->cliente ?? '')) == $cliente->id ? 'selected' : '' }}>
                         {{ $cliente->nome }}
                     </option>
                     @endforeach
                 </select>
-            </div> --}}
+            </div>
 
 
             <div>
@@ -81,7 +81,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select name="status"
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @foreach(['Pendente', 'Em Trânsito', 'Entregue', 'Cancelado'] as $status)
+                    @foreach(['Pendente', 'Liberado', 'Em Trânsito', 'Entregue', 'Cancelado'] as $status)
                     <option value="{{ $status }}" {{ (old('status', $pedido->status ?? '') === $status) ? 'selected' :
                         '' }}>
                         {{ $status }}

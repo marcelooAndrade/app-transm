@@ -4,54 +4,43 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Artisan;
+
 
 class ScrapingController extends Controller
 {
-    public function executar(Request $request)
-    {
-        try {
-
-            ini_set('max_execution_time', 300); // permite rodar até 5 minutos
-
-            // Caminho absoluto do seu script Python
-            $process = new Process(['python3', base_path('scripts/main.py')]);
-            $process->run();
-
-
-            // Verifica se houve erro
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-            }
-
-            return back()->with('success', 'Scraping executado com sucesso!');
-        } catch (\Throwable $e) {
-            return back()->with('error', 'Erro ao executar scraping: ' . $e->getMessage());
-        }
-    }
-
     public function stream()
     {
-        ini_set('max_execution_time', 30);
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-        header('X-Accel-Buffering: no'); // nginx
+        return new StreamedResponse(function () {
+            set_time_limit(0); // <-- Adicionado aqui
 
-        $scriptPath = base_path('scripts/main.py');
-        $process = new \Symfony\Component\Process\Process(['python3', $scriptPath]);
-        $process->setTimeout(600); // 10 min
-
-        $process->start();
-
-        foreach ($process as $type => $data) {
-            echo "data: " . trim($data) . "\n\n";
+            $process = popen(PHP_BINARY . ' ' . base_path('artisan') . ' scraping:ceramicas', 'r');
+            echo "event: message\n";
+            echo "data: Iniciando coleta...\n\n";
             ob_flush();
             flush();
-        }
 
-        echo "data: [FINALIZADO]\n\n";
-        ob_flush();
-        flush();
+            while (!feof($process)) {
+                $line = fgets($process);
+                if ($line) {
+                    echo "event: message\n";
+                    echo 'data: ' . trim($line) . "\n\n";
+                    ob_flush();
+                    flush();
+                }
+            }
+
+            echo "event: message\n";
+            echo "data: [FINALIZADO] Coleta encerrada.\n\n";
+            ob_flush();
+            flush();
+
+            pclose($process);
+        }, 200, [
+            'Content-Type' => 'text/event-stream',
+            'Cache-Control' => 'no-cache',
+            'X-Accel-Buffering' => 'no',
+        ]);
     }
 }
