@@ -176,7 +176,7 @@
     function executarScraping() {
     document.getElementById('modalScraping').classList.remove('hidden');
     const logEl = document.getElementById('logSaida');
-    logEl.textContent = 'Iniciando scraping...\n';
+    logEl.textContent = 'Iniciando importação ...\n';
 
     const evtSource = new EventSource("{{ route('scraping.stream') }}");
 
@@ -186,8 +186,6 @@
 
         if (event.data.includes('[FINALIZADO]')) {
             evtSource.close();
-            fecharModal();
-            location.reload(); // 🔄 Atualiza a página ao finalizar
         }
     };
 
@@ -199,6 +197,8 @@
 
 function fecharModal() {
     document.getElementById('modalScraping').classList.add('hidden');
+    location.reload(); // 🔄 Atualiza a página ao finalizar
+
 }
 </script>
 
