@@ -81,7 +81,7 @@ class VillagresScraper
                     'peso_total'      => (float) ($item['peso_bru'] ?? 0),
                     'cidade'          => $cidade,
                     'estado'          => $estado,
-                    'status'          => 'pendente',
+                    'status'          => 'Pendente',
                 ];
             }
         }

@@ -91,7 +91,7 @@ class CedasaScraper
                     'peso_total' => floatval(str_replace(',', '.', $cols[12]->nodeValue)),
                     'cidade' => $cidade,
                     'estado' => $estado,
-                    'status' => 'pendente',
+                    'status' => 'Pendente',
                 ];
 
                 $pedidos[] = $pedido;

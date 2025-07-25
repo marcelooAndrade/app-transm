@@ -97,7 +97,7 @@ class IncopisosScraper
                     'peso_total' => floatval(str_replace(',', '.', $get(12))),
                     'cidade' => $cidade,
                     'estado' => $estado,
-                    'status' => 'pendente',
+                    'status' => 'Pendente',
                 ];
 
                 $pedidos[] = $pedido;

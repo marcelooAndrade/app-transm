@@ -110,7 +110,7 @@ class TransportadoraCcfScraper
                 'industria'         => 'Cecafi',
                 'tipo_produto'      => 'CERAMICA/PISO',
                 'cidade'            => 'ND',
-                'status'            => 'pendente',
+                'status'            => 'Pendente',
             ];
 
             if ($pedido['numero_pedido'] && $pedido['codigo_produto']) {

@@ -71,7 +71,7 @@ class CeramicaAlmeidaScraper
                 'peso_total' => $pesoTotal,
                 'cidade' => 'ND',
                 'estado' => 'ND',
-                'status' => 'pendente',
+                'status' => 'Pendente',
             ];
         }
 

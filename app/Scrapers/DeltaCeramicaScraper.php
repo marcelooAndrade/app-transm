@@ -60,7 +60,7 @@ class DeltaCeramicaScraper
                     'peso_total' => (float) $item['peso_bru'] ?? 0,
                     'cidade' => trim($cidadeEstado[0] ?? 'ND'),
                     'estado' => trim($cidadeEstado[1] ?? 'ND'),
-                    'status' => 'pendente'
+                    'status' => 'Pendente'
                 ];
             }
         }

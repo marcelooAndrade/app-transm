@@ -92,7 +92,7 @@ class NovaPorcelanatoScraper
                     'peso_total' => floatval(str_replace(',', '.', $cols[14]->nodeValue)),
                     'cidade' => $cidade,
                     'estado' => $estado,
-                    'status' => 'pendente',
+                    'status' => 'Pendente',
                 ];
 
                 $pedidos[] = $pedido;
