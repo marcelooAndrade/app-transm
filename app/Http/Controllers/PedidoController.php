@@ -11,7 +11,7 @@ class PedidoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PedidoLogistica::with(['fornecedor', 'cliente', 'rota', 'tipoCaminhao']);
+        $query = PedidoLogistica::with(['fornecedor', 'cliente', 'rota']);
 
         // Filtros
         if ($request->has('search')) {
