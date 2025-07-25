@@ -32,4 +32,23 @@ class Pessoa extends Model
     {
         return $query->where('status', 'ativo');
     }
+
+    // App\Models\Pessoa.php
+
+    public function setNomeAttribute($value)
+    {
+        $preposicoes = ['da', 'de', 'do', 'das', 'dos', 'e'];
+        $palavras = explode(' ', strtolower($value));
+
+        $nomeFormatado = collect($palavras)->map(function ($palavra, $index) use ($preposicoes) {
+            // Sempre coloca a primeira palavra com inicial maiúscula
+            if ($index === 0 || !in_array($palavra, $preposicoes)) {
+                return ucfirst($palavra);
+            }
+
+            return $palavra;
+        })->implode(' ');
+
+        $this->attributes['nome'] = $nomeFormatado;
+    }
 }
