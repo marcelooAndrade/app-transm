@@ -67,7 +67,7 @@ class PedidoController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'fornecedor_id' => 'required|exists:fornecedores,id',
-            'cliente_id' => 'required|exists:clientes,id',
+            'cliente' => 'required|exists:clientes,id',
             'quantidade_toneladas' => 'required|numeric|min:0',
             'quantidade_paletes' => 'required|integer|min:0',
             'rota_id' => 'required|exists:rotas,id',
@@ -114,7 +114,7 @@ class PedidoController extends Controller
         $validated = $request->validate([
             'representante'       => 'nullable|string|max:255',
             'data_pedido'         => 'nullable|date',
-            'cliente_id'             => 'nullable|string|max:255',
+            'cliente'             => 'nullable|string|max:255',
             'numero_pedido'       => 'nullable|string|max:255',
             'codigo_produto'      => 'nullable|string|max:255',
             'descricao_produto'   => 'nullable|string|max:255',

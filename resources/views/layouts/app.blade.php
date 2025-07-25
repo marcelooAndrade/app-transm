@@ -46,6 +46,7 @@
         .dataTables_wrapper .dataTables_filter input {
             @apply border border-border rounded-lg px-2 py-1 text-sm;
         }
+
         .dataTables_wrapper .dataTables_length select {
             @apply border border-border rounded-lg px-2 py-1 text-sm;
         }
@@ -78,6 +79,28 @@
 
             <!-- Page Content -->
             <main class="flex-1 p-6 overflow-auto">
+                @if(session('success'))
+                <div id="alert-success"
+                    class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div id="alert-error" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    {{ session('error') }}
+                </div>
+                @endif
+
+                <script>
+                    setTimeout(() => {
+        const success = document.getElementById('alert-success');
+        const error = document.getElementById('alert-error');
+        if (success) success.style.display = 'none';
+        if (error) error.style.display = 'none';
+    }, 3000);
+                </script>
+
                 @yield('content')
             </main>
         </div>
