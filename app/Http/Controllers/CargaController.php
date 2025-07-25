@@ -49,6 +49,7 @@ class CargaController extends Controller
         $carga = new Carga();
         $rotas = Rota::with('cidades')->where('status', 'ativa')->get();
         $pedidos = PedidoLogistica::where('status', 'Liberado')->get();
+        dd($pedidos);
         $cargaPedidos = [];
 
         return view('cargas.form', compact('carga', 'rotas', 'pedidos', 'cargaPedidos'));
