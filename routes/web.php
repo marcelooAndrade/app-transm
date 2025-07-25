@@ -22,6 +22,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/scraping/stream', [ScrapingController::class, 'stream'])->name('scraping.stream');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,7 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/pedidos/{id}/ordem-servico', [PedidoController::class, 'gerarOrdemServico'])->name('pedidos.ordem-servico');
     Route::post('/pedidos/importar', [ImportacaoPedidoController::class, 'upload'])->name('pedidos.upload');
     Route::post('/pedidos/scraping', [ImportacaoPedidoController::class, 'scraping'])->name('pedidos.scraping');
-    Route::get('/scraping/stream', [ScrapingController::class, 'stream'])->name('scraping.stream');
 
 
 
