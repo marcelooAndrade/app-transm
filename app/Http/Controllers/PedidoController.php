@@ -89,12 +89,12 @@ class PedidoController extends Controller
         $pedido->rota->incrementarUtilizacao();
         $pedido->tipoCaminhao->incrementarUtilizacao();
 
-        return response()->json($pedido->load(['fornecedor', 'cliente', 'rota', 'tipoCaminhao']), 201);
+        return response()->json($pedido->load(['fornecedor', 'cliente', 'rota']), 201);
     }
 
     public function edit($id)
     {
-        $pedido = PedidoLogistica::with(['fornecedor', 'cliente', 'rota', 'tipoCaminhao'])->findOrFail($id);
+        $pedido = PedidoLogistica::with(['fornecedor', 'cliente', 'rota'])->findOrFail($id);
         $clientes = Pessoa::orderBy('nome')->get();
 
         return view('pedidos.form', compact('pedido', 'clientes'));
@@ -146,7 +146,7 @@ class PedidoController extends Controller
 
     public function gerarOrdemServico($id)
     {
-        $pedido = PedidoLogistica::with(['fornecedor', 'cliente', 'rota', 'tipoCaminhao'])->findOrFail($id);
+        $pedido = PedidoLogistica::with(['fornecedor', 'cliente', 'rota'])->findOrFail($id);
 
         // Aqui seria implementada a geração do PDF da ordem de serviço
         $ordemServico = [
