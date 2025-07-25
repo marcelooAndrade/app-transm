@@ -84,6 +84,8 @@
                     <label class="text-sm font-medium">Status</label>
                     <select name="status" class="w-full px-3 py-2 border border-border rounded-lg bg-background">
                         <option value="all" {{ request('status')==='all' ? 'selected' : '' }}>Todos</option>
+                        <option value="Liberado" {{ request('status')==='Liberado' ? 'selected' : '' }}>Liberado
+                        </option>
                         <option value="Pendente" {{ request('status')==='Pendente' ? 'selected' : '' }}>Pendente
                         </option>
                         <option value="Em Trânsito" {{ request('status')==='Em Trânsito' ? 'selected' : '' }}>Em
@@ -150,8 +152,9 @@
                             </div>
                         </td>
                         <td class="p-4">
-                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">{{ $pedido->status
-                                }}</span>
+                            <span class="px-2 py-1 text-xs rounded-full {{ $statusClasses[$pedido->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                {{ $pedido->status }}
+                            </span>
                         </td>
                         <td class="p-4 text-sm">{{ \Carbon\Carbon::parse($pedido->data_pedido)->format('d/m/Y') }}</td>
                         <!-- COLUNA DE AÇÕES -->

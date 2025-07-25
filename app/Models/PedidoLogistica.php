@@ -55,7 +55,6 @@ class PedidoLogistica extends Model
         return $this->belongsToMany(Carga::class, 'carga_pedido', 'pedido_id', 'carga_id');
     }
 
-
     public function scopePendentes($query)
     {
         return $query->where('status', 'pendente');

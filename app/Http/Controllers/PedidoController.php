@@ -11,6 +11,13 @@ class PedidoController extends Controller
 {
     public function index(Request $request)
     {
+        $statusClasses = [
+            'Pendente' => 'bg-yellow-100 text-yellow-800',
+            'Liberado' => 'bg-green-100 text-green-800',
+            'Em Trânsito' => 'bg-blue-100 text-blue-800',
+            'Entregue' => 'bg-gray-100 text-gray-800',
+            'Cancelado' => 'bg-red-100 text-red-800',
+        ];
         $query = PedidoLogistica::with(['fornecedor', 'cliente', 'rota']);
 
         // Filtros
@@ -47,7 +54,7 @@ class PedidoController extends Controller
         $pedidos = $query->paginate(10);
 
 
-        return view('pedidos.index', compact('pedidos'));
+        return view('pedidos.index', compact('pedidos', 'statusClasses'));
     }
 
     public function create()
