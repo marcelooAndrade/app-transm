@@ -152,7 +152,7 @@
                             </div>
                         </td>
                         <td class="p-4">
-                            <span class="px-2 py-1 text-xs rounded-full {{ $statusClasses[$pedido->status] ?? 'bg-gray-100 text-gray-800' }}">
+                            <span class="px-2 py-1 text-xs rounded-full capitalize {{ $statusClasses[$pedido->status] ?? 'bg-gray-100 text-gray-800' }}">
                                 {{ $pedido->status }}
                             </span>
                         </td>
