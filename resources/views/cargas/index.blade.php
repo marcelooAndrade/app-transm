@@ -72,6 +72,7 @@
                         <th class="text-left p-4">Rota</th>
                         <th class="text-left p-4">Pedidos</th>
                         <th class="text-left p-4">Criado em</th>
+                        <th class="text-left p-4">Status</th>
                         <th class="text-left p-4">Ações</th>
                     </tr>
                 </thead>
@@ -83,6 +84,7 @@
                         <td class="p-4">{{ $carga->rota->nome ?? '-' }}</td>
                         <td class="p-4">{{ $carga->pedidos->count() }} pedidos</td>
                         <td class="p-4 text-sm">{{ $carga->created_at->format('d/m/Y') }}</td>
+                        <td class="p-4 text-sm">{{ $carga->status }}</td>
                         <td class="p-4">
                             <a href="{{ route('cargas.edit', $carga->id) }}"
                                 class="inline-flex items-center gap-1 px-3 py-1 text-sm text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition">
